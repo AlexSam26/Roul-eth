@@ -1,5 +1,22 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 
+// Constantes module-scope pour garder des références stables (et éviter des deps qui changent à chaque render)
+const ROULETTE_NUMBERS = [
+  0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36, 11, 30, 8, 23, 10, 5, 24, 16, 33, 1, 20, 14, 31, 9, 22, 18, 29, 7, 28, 12, 35, 3, 26,
+] as const;
+
+const PROBABILITIES = {
+  red: 18 / 37,
+  black: 18 / 37,
+  green: 1 / 37,
+} as const;
+
+const MULTIPLIERS = {
+  red: 2,
+  black: 2,
+  green: 35,
+} as const;
+
 export interface GameState {
   isPlaying: boolean;
   currentRound: number;
@@ -46,24 +63,16 @@ export function useGameLogic() {
   const gameIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const roundTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Configuration de la roulette européenne (37 positions)
-  const ROULETTE_NUMBERS = [
-    0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36, 11, 30, 8, 23, 10, 5, 24, 16, 33, 1, 20, 14, 31, 9, 22, 18, 29, 7, 28, 12, 35, 3, 26
-  ];
-
-  // Probabilités exactes (roulette européenne)
-  const PROBABILITIES = {
-    red: 18/37,      // 18 numéros rouges sur 37
-    black: 18/37,    // 18 numéros noirs sur 37
-    green: 1/37      // 1 numéro vert (0) sur 37
-  };
-
-  // Multiplicateurs exacts
-  const MULTIPLIERS = {
-    red: 2,
-    black: 2,
-    green: 35 // 35:1 pour le vert (standard casino)
-  };
+  // Démarrer une nouvelle manche (déclaré tôt car utilisé par des useEffect)
+  const startNewRound = useCallback(() => {
+    setGameState(prev => ({
+      ...prev,
+      isPlaying: true,
+      currentRound: prev.currentRound + 1,
+      timeRemaining: 30,
+      bets: [],
+    }));
+  }, []);
 
   // Fonction de génération de nombre aléatoire cryptographiquement sécurisée
   const generateRandomNumber = useCallback(() => {
@@ -198,17 +207,6 @@ export function useGameLogic() {
         clearTimeout(roundTimeoutRef.current);
       }
     };
-  }, []);
-
-  // Démarrer une nouvelle manche
-  const startNewRound = useCallback(() => {
-    setGameState(prev => ({
-      ...prev,
-      isPlaying: true,
-      currentRound: prev.currentRound + 1,
-      timeRemaining: 30,
-      bets: [],
-    }));
   }, []);
 
   // Placer un pari avec validation stricte

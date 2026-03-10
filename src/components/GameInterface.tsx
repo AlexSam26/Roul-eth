@@ -9,13 +9,6 @@ import BetButton from './BetButton';
 import { useGameLogic } from '@/hooks/useGameLogic';
 import { useTelegram } from '@/hooks/useTelegram';
 
-interface GameBlock {
-  id: number;
-  active: boolean;
-  color: 'red' | 'gray' | 'green';
-  glow?: boolean;
-}
-
 export default function GameInterface() {
   const {
     gameState,
@@ -28,15 +21,6 @@ export default function GameInterface() {
   } = useGameLogic();
 
   const { isTelegram, user } = useTelegram();
-
-  const [gameBlocks, setGameBlocks] = useState<GameBlock[]>(
-    Array(10).fill(null).map((_, i) => ({
-      id: i,
-      active: i < 5,
-      color: i < 3 ? 'red' : i < 5 ? 'gray' : i < 8 ? 'red' : 'gray',
-      glow: i < 3,
-    }))
-  );
 
   const [recentResults, setRecentResults] = useState([
     { id: Date.now() - 4, outcome: 'red', multiplier: 2 },
@@ -55,32 +39,6 @@ export default function GameInterface() {
       ]);
     }
   }, [gameState.results]);
-
-  // Update game blocks based on current game state
-  useEffect(() => {
-    if (!gameState.isPlaying && gameState.results.length > 0) {
-      const latestResult = gameState.results[0];
-      updateGameBlocks(latestResult.outcome);
-    } else if (gameState.isPlaying) {
-      // Reset blocks to default state during play
-      setGameBlocks(Array(10).fill(null).map((_, i) => ({
-        id: i,
-        active: i < 5,
-        color: i < 3 ? 'red' : i < 5 ? 'gray' : i < 8 ? 'red' : 'gray',
-        glow: i < 3,
-      })));
-    }
-  }, [gameState.isPlaying, gameState.results]);
-
-  const updateGameBlocks = (outcome: 'red' | 'green' | 'black') => {
-    const newBlocks: GameBlock[] = Array(10).fill(null).map((_, i) => ({
-      id: i,
-      active: i < 5,
-      color: (i < 5 ? outcome : 'gray') as 'red' | 'gray' | 'green',
-      glow: i < 5,
-    }));
-    setGameBlocks(newBlocks);
-  };
 
   // Get current result for roulette display
   const getCurrentResult = () => {
@@ -244,7 +202,6 @@ export default function GameInterface() {
         {/* Game Outcome Display */}
         <div className="mb-6 flex justify-center">
           <GameBlocks 
-            blocks={gameBlocks} 
             isSpinning={isRouletteSpinning()}
             result={getCurrentResult()}
           />

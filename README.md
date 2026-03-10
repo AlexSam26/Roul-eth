@@ -1,36 +1,114 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ROUL'ETH - Crypto Roulette Game
 
-## Getting Started
+Un jeu de roulette crypto moderne et élégant inspiré du design de ROUL'ETH, construit avec Next.js, TypeScript, Tailwind CSS et Web3.
 
-First, run the development server:
+## 🎮 Fonctionnalités
+
+- **Interface moderne** : Design sombre avec accents rouges
+- **Animations fluides** : Utilisation de Framer Motion pour des transitions élégantes
+- **Intégration Web3** : Support pour les wallets crypto (MetaMask, WalletConnect, etc.)
+- **Logique de jeu réaliste** : Système de paris avec multiplicateurs
+- **Responsive Design** : Interface adaptée à tous les écrans
+- **Timer de jeu** : Rounds automatiques avec compte à rebours
+
+## 🚀 Installation
 
 ```bash
+# Cloner le projet
+git clone <repository-url>
+cd rouletheth
+
+# Installer les dépendances
+npm install
+
+# Lancer le serveur de développement
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🛠️ Technologies utilisées
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Next.js 14** : Framework React avec App Router
+- **TypeScript** : Typage statique pour une meilleure maintenabilité
+- **Tailwind CSS** : Framework CSS utilitaire
+- **Framer Motion** : Animations et transitions
+- **Wagmi** : Hooks React pour Ethereum
+- **RainbowKit** : Interface de connexion wallet
+- **Lucide React** : Icônes modernes
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🎯 Structure du projet
 
-## Learn More
+```
+src/
+├── app/                 # Pages et layout Next.js
+├── components/          # Composants React réutilisables
+│   ├── GameInterface.tsx
+│   ├── GameBlocks.tsx
+│   ├── GameTimer.tsx
+│   ├── BetButton.tsx
+│   └── Web3Provider.tsx
+├── hooks/              # Hooks personnalisés
+│   └── useGameLogic.ts
+└── lib/                # Utilitaires et configurations
+```
 
-To learn more about Next.js, take a look at the following resources:
+## 🎲 Logique de jeu
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Le jeu fonctionne avec un système de rounds de 30 secondes :
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **Rouge** : Multiplicateur 2x (45% de chance)
+- **Vert** : Multiplicateur 14x (5% de chance)
+- **Noir** : Multiplicateur 2x (50% de chance)
 
-## Deploy on Vercel
+Les paris sont acceptés pendant les 30 secondes de chaque round, puis le résultat est déterminé automatiquement.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🔧 Configuration Web3
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Pour activer la connexion wallet, vous devez :
+
+1. Obtenir un Project ID de WalletConnect
+2. Modifier `src/components/Web3Provider.tsx`
+3. Remplacer `YOUR_PROJECT_ID` par votre ID
+
+## 🎨 Personnalisation
+
+Le design peut être personnalisé via :
+
+- `src/app/globals.css` : Variables CSS et styles globaux
+- `tailwind.config.ts` : Configuration Tailwind
+- `src/components/` : Composants individuels
+
+## 📱 Responsive
+
+L'interface s'adapte automatiquement aux différentes tailles d'écran :
+
+- Desktop : Layout complet avec sidebar
+- Tablet : Layout adapté
+- Mobile : Interface optimisée pour mobile
+
+## 🚀 Déploiement
+
+```bash
+# Build de production
+npm run build
+
+# Lancer en production
+npm start
+```
+
+## 📄 Licence
+
+MIT License - voir le fichier LICENSE pour plus de détails.
+
+## 🤝 Contribution
+
+Les contributions sont les bienvenues ! N'hésitez pas à :
+
+1. Fork le projet
+2. Créer une branche feature
+3. Commiter vos changements
+4. Pousser vers la branche
+5. Ouvrir une Pull Request
+
+---
+
+**ROUL'ETH** - Le futur du gaming crypto 🎮

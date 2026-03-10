@@ -92,7 +92,7 @@ export function useGameLogic() {
     });
 
     return totalWinnings;
-  }, []);
+  }, [MULTIPLIERS]);
 
   // Calculer l'avantage maison
   const calculateHouseEdge = useCallback((totalWagered: number, totalPayout: number) => {
@@ -136,7 +136,7 @@ export function useGameLogic() {
     }, 2000);
 
     return () => clearTimeout(timer);
-  }, []);
+  }, [startNewRound]);
 
   // Timer de jeu optimisé
   useEffect(() => {
@@ -186,7 +186,7 @@ export function useGameLogic() {
         }
       };
     }
-  }, [gameState.isPlaying, gameState.timeRemaining]);
+  }, [gameState.isPlaying, gameState.timeRemaining, startNewRound]);
 
   // Nettoyer les timeouts au démontage
   useEffect(() => {

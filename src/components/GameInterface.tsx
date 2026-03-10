@@ -1,12 +1,13 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Star, X, Coins, TrendingUp, BarChart3, Target, Zap } from 'lucide-react';
+import { X, Coins } from 'lucide-react';
 import { motion } from 'framer-motion';
 import GameBlocks from './GameBlocks';
 import GameTimer from './GameTimer';
 import BetButton from './BetButton';
 import { useGameLogic } from '@/hooks/useGameLogic';
+import { useTelegram } from '@/hooks/useTelegram';
 
 interface GameBlock {
   id: number;
@@ -25,6 +26,8 @@ export default function GameInterface() {
     PROBABILITIES,
     MULTIPLIERS,
   } = useGameLogic();
+
+  const { isTelegram, user } = useTelegram();
 
   const [gameBlocks, setGameBlocks] = useState<GameBlock[]>(
     Array(10).fill(null).map((_, i) => ({
@@ -126,42 +129,60 @@ export default function GameInterface() {
     <div className="min-h-screen bg-black text-white">
       {/* Header */}
       <motion.header 
-        className="flex items-center justify-between px-6 py-4 border-b border-gray-600"
+        className={`flex items-center justify-between border-b border-gray-600 ${
+          isTelegram ? 'px-4 py-2' : 'px-6 py-4'
+        }`}
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.5 }}
       >
-        <div className="flex items-center space-x-6">
-          <a href="#" className="text-white hover:text-gray-300 transition-colors">FAQ</a>
-          <a href="#" className="text-white hover:text-gray-300 transition-colors">Support</a>
-          <a href="#" className="text-white hover:text-gray-300 transition-colors">Docs</a>
-          <a href="#" className="text-white hover:text-gray-300 transition-colors">Referrals</a>
-          <X className="w-5 h-5 text-white hover:text-gray-300 cursor-pointer transition-colors" />
+        <div className="flex items-center space-x-4">
+          {!isTelegram && (
+            <>
+              <a href="#" className="text-white hover:text-gray-300 transition-colors text-sm">FAQ</a>
+              <a href="#" className="text-white hover:text-gray-300 transition-colors text-sm">Support</a>
+              <a href="#" className="text-white hover:text-gray-300 transition-colors text-sm">Docs</a>
+              <a href="#" className="text-white hover:text-gray-300 transition-colors text-sm">Referrals</a>
+              <X className="w-5 h-5 text-white hover:text-gray-300 cursor-pointer transition-colors" />
+            </>
+          )}
+          {isTelegram && user && (
+            <span className="text-gray-400 text-sm">
+              👋 {user.firstName}
+            </span>
+          )}
         </div>
         
         <motion.h1 
-          className="text-3xl font-bold text-white"
+          className={`font-bold text-white ${isTelegram ? 'text-xl' : 'text-3xl'}`}
           animate={{ scale: [1, 1.05, 1] }}
           transition={{ duration: 2, repeat: Infinity }}
         >
           ROUL&apos;ETH
         </motion.h1>
         
-        <div className="flex items-center space-x-4">
-          <motion.button 
-            className="bg-gray-700 hover:bg-gray-600 px-6 py-2 rounded font-semibold transition-colors"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            Sign in
-          </motion.button>
-          <motion.button 
-            className="border border-gray-500 hover:bg-gray-700 hover:text-white px-6 py-2 rounded font-semibold transition-colors"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            Wallet Connect
-          </motion.button>
+        <div className="flex items-center space-x-2">
+          {!isTelegram && (
+            <>
+              <motion.button 
+                className="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded font-semibold transition-colors text-sm"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                Sign in
+              </motion.button>
+              <motion.button 
+                className="border border-gray-500 hover:bg-gray-700 hover:text-white px-4 py-2 rounded font-semibold transition-colors text-sm"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                Wallet Connect
+              </motion.button>
+            </>
+          )}
+          {isTelegram && (
+            <span className="text-xs text-gray-500">Mini App</span>
+          )}
         </div>
       </motion.header>
 

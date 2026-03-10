@@ -11,12 +11,11 @@ interface GameBlock {
 }
 
 interface GameBlocksProps {
-  blocks: GameBlock[];
   isSpinning?: boolean;
   result?: 'red' | 'green' | 'black';
 }
 
-export default function GameBlocks({ blocks, isSpinning = false, result }: GameBlocksProps) {
+export default function GameBlocks({ isSpinning = false, result }: GameBlocksProps) {
   const [ballPosition, setBallPosition] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
   const [spinSpeed, setSpinSpeed] = useState(100);
@@ -29,13 +28,6 @@ export default function GameBlocks({ blocks, isSpinning = false, result }: GameB
   // Nombres rouges sur une vraie roulette européenne
   const RED_NUMBERS = [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36];
 
-  // Démarrer l'animation quand isSpinning change
-  useEffect(() => {
-    if (isSpinning && !isAnimating) {
-      startAnimation();
-    }
-  }, [isSpinning]);
-
   const startAnimation = () => {
     setIsAnimating(true);
     setBallPosition(0);
@@ -43,7 +35,7 @@ export default function GameBlocks({ blocks, isSpinning = false, result }: GameB
     
     let pos = 0;
     let speed = 100;
-    let acceleration = 1.1;
+    const acceleration = 1.1;
     
     const interval = setInterval(() => {
       pos = (pos + 1) % ROULETTE_NUMBERS.length;
@@ -62,6 +54,13 @@ export default function GameBlocks({ blocks, isSpinning = false, result }: GameB
       }
     }, speed);
   };
+
+  // Démarrer l'animation quand isSpinning change
+  useEffect(() => {
+    if (isSpinning && !isAnimating) {
+      startAnimation();
+    }
+  }, [isSpinning, isAnimating, startAnimation]);
 
   const getNumberColor = (number: number): 'red' | 'green' | 'black' => {
     if (number === 0) return 'green';

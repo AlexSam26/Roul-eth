@@ -10,6 +10,7 @@ Un jeu de roulette crypto moderne et élégant inspiré du design de ROUL'ETH, c
 - **Logique de jeu réaliste** : Système de paris avec multiplicateurs
 - **Responsive Design** : Interface adaptée à tous les écrans
 - **Timer de jeu** : Rounds automatiques avec compte à rebours
+- **Telegram Mini App** : Jouer directement dans l'app Telegram
 
 ## 🚀 Installation
 
@@ -47,7 +48,8 @@ src/
 │   ├── BetButton.tsx
 │   └── Web3Provider.tsx
 ├── hooks/              # Hooks personnalisés
-│   └── useGameLogic.ts
+│   ├── useGameLogic.ts
+│   └── useTelegram.ts  # Détection Mini App Telegram
 └── lib/                # Utilitaires et configurations
 ```
 
@@ -76,6 +78,24 @@ Le design peut être personnalisé via :
 - `src/app/globals.css` : Variables CSS et styles globaux
 - `tailwind.config.ts` : Configuration Tailwind
 - `src/components/` : Composants individuels
+
+## 📲 Configuration Telegram Mini App
+
+Pour que les utilisateurs jouent via ton bot Telegram :
+
+1. **Déploie ton app** sur un hébergeur HTTPS (Vercel, Netlify, etc.)
+   - Exemple : `https://rouletheth.vercel.app`
+
+2. **Configure ton bot** avec [@BotFather](https://t.me/BotFather) :
+   - `/newbot` ou `/mybots` → choisis ton bot
+   - **Bot Settings** → **Menu Button** → **Configure menu button**
+   - Entre l’URL de ton app : `https://ton-domaine.com`
+
+3. **Ou utilise une commande** comme `/play` :
+   - Dans ton bot, renvoie un bouton ou lien vers `https://ton-domaine.com`
+   - Les utilisateurs cliquent et ouvrent le jeu en Mini App
+
+4. **Résultat** : l’interface s’adapte automatiquement en mode Telegram (header compact, nom d’utilisateur visible).
 
 ## 📱 Responsive
 

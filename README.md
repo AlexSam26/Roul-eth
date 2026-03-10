@@ -97,6 +97,61 @@ Pour que les utilisateurs jouent via ton bot Telegram :
 
 4. **Résultat** : l’interface s’adapte automatiquement en mode Telegram (header compact, nom d’utilisateur visible).
 
+## 🦊 Wallet (MetaMask) + Smart contract (Sepolia)
+
+### 1) Activer le bouton MetaMask
+
+Le bouton de connexion est déjà dans l’UI (RainbowKit). Il faut juste fournir un `projectId` WalletConnect côté front :
+
+- Crée un fichier `E:\CODE\rouletheth\.env.local` (non commité) :
+
+```bash
+NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=TON_PROJECT_ID_WALLETCONNECT
+```
+
+Ensuite relance :
+
+```bash
+npm run dev
+```
+
+### 2) Compiler / déployer le contrat sur Sepolia (Hardhat)
+
+- Copie `.env.example` vers `.env` (ou mets ces variables dans ton environnement) :
+
+```bash
+SEPOLIA_RPC_URL=...
+DEPLOYER_PRIVATE_KEY=...
+```
+
+- Compiler :
+
+```bash
+npm run hardhat:compile
+```
+
+- Déployer sur Sepolia (le script envoie aussi une bankroll initiale) :
+
+```bash
+npm run hardhat:deploy:sepolia
+```
+
+Le terminal affichera l’adresse du contrat.
+
+### 3) Brancher l’app sur le contrat
+
+Dans `E:\CODE\rouletheth\.env.local` ajoute l’adresse déployée :
+
+```bash
+NEXT_PUBLIC_ROULETTE_CONTRACT_ADDRESS=0x...
+```
+
+Quand `NEXT_PUBLIC_ROULETTE_CONTRACT_ADDRESS` est défini et que le wallet est connecté, les boutons “Place Bet” enverront une **vraie transaction** au contrat (sinon ça reste en mode démo local).
+
+### Sécurité
+
+Le contrat actuel utilise un tirage **pseudo-aléatoire** (OK pour testnet/démo). Pour un “vrai” casino en production, il faudra intégrer une source d’aléa vérifiable (Chainlink VRF ou commit-reveal).
+
 ## 📱 Responsive
 
 L'interface s'adapte automatiquement aux différentes tailles d'écran :

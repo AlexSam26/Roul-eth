@@ -6,10 +6,13 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "hardhat:compile": "hardhat compile",
+    "hardhat:deploy:sepolia": "hardhat run scripts/deploy-sepolia.cjs --network sepolia"
   },
   "dependencies": {
     "@rainbow-me/rainbowkit": "^2.2.8",
+    "@tanstack/react-query": "^5.85.0",
     "ethers": "^6.15.0",
     "framer-motion": "^12.23.12",
     "lucide-react": "^0.536.0",
@@ -25,8 +28,11 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@nomicfoundation/hardhat-toolbox": "^6.1.0",
+    "dotenv": "^16.6.1",
     "eslint": "^9",
     "eslint-config-next": "15.4.10",
+    "hardhat": "^2.26.0",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

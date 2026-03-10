@@ -3,11 +3,14 @@
 import React, { useState, useEffect } from 'react';
 import { X, Coins } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { ConnectButton } from '@rainbow-me/rainbowkit';
 import GameBlocks from './GameBlocks';
 import GameTimer from './GameTimer';
 import BetButton from './BetButton';
 import { useGameLogic } from '@/hooks/useGameLogic';
 import { useTelegram } from '@/hooks/useTelegram';
+import { useAccount } from 'wagmi';
+import { useRouletteContract } from '@/hooks/useRouletteContract';
 
 export default function GameInterface() {
   const {
@@ -21,6 +24,8 @@ export default function GameInterface() {
   } = useGameLogic();
 
   const { isTelegram, user } = useTelegram();
+  const { isConnected } = useAccount();
+  const roulette = useRouletteContract();
 
   const [recentResults, setRecentResults] = useState([
     { id: Date.now() - 4, outcome: 'red', multiplier: 2 },
@@ -58,13 +63,23 @@ export default function GameInterface() {
     setBetAmount(Math.max(0, value));
   };
 
-  const handlePlaceBet = (type: 'red' | 'green' | 'black') => {
-    if (betAmount <= 0 || betAmount > gameState.balance) return;
-    
-    const success = placeBet(type, betAmount);
-    if (success) {
-      setBetAmount(0);
+  const handlePlaceBet = async (type: 'red' | 'green' | 'black') => {
+    // Si contrat configuré + wallet connecté => pari on-chain
+    if (roulette.enabled && isConnected) {
+      if (betAmount <= 0) return;
+      try {
+        await roulette.placeBet(type === 'black' ? 'black' : type, betAmount);
+        setBetAmount(0);
+      } catch {
+        // On ne spam pas l'UI ici ; l'erreur sera visible dans le wallet
+      }
+      return;
     }
+
+    // Sinon fallback en mode demo (logique locale)
+    if (betAmount <= 0 || betAmount > gameState.balance) return;
+    const success = placeBet(type, betAmount);
+    if (success) setBetAmount(0);
   };
 
   const clearBet = () => setBetAmount(0);
@@ -129,13 +144,9 @@ export default function GameInterface() {
               >
                 Sign in
               </motion.button>
-              <motion.button 
-                className="border border-gray-500 hover:bg-gray-700 hover:text-white px-4 py-2 rounded font-semibold transition-colors text-sm"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                Wallet Connect
-              </motion.button>
+              <div className="pl-2">
+                <ConnectButton chainStatus="icon" showBalance={false} />
+              </div>
             </>
           )}
           {isTelegram && (
@@ -290,7 +301,7 @@ export default function GameInterface() {
                   multiplier={betType.multiplier}
                   totalBets={stats.count}
                   totalAmount={stats.total}
-                  onPlaceBet={() => handlePlaceBet(betType.type)}
+                  onPlaceBet={() => void handlePlaceBet(betType.type)}
                   disabled={!gameState.isPlaying || betAmount <= 0 || betAmount > gameState.balance}
                   probability={betType.probability}
                 />

@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
+import '@rainbow-me/rainbowkit/styles.css';
+import { Web3Provider } from '@/components/Web3Provider';
 
 export const metadata: Metadata = {
   title: 'ROUL\'ETH - Crypto Roulette Game',
@@ -55,7 +57,7 @@ export default function RootLayout({
         />
       </head>
       <body className="antialiased">
-        {children}
+        <Web3Provider>{children}</Web3Provider>
       </body>
     </html>
   );
